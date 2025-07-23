@@ -20,7 +20,12 @@ export async function POST(req: NextRequest) {
     - N'invente jamais de prix ou de délais précis, invite à consulter le catalogue ou à demander un devis.
   `
     };
-    const userMessages = messages.map((m: any) => ({ role: m.from === 'user' ? 'user' : 'assistant', content: m.text }));
+    const userMessages = messages.map((m: unknown) => {
+      if (typeof m === 'object' && m !== null && 'from' in m && 'text' in m) {
+        return { role: (m as { from: string }).from === 'user' ? 'user' : 'assistant', content: (m as { text: string }).text };
+      }
+      return { role: 'user', content: '' };
+    });
     const payload = {
       model: "gpt-3.5-turbo",
       messages: [systemPrompt, ...userMessages],
@@ -38,7 +43,7 @@ export async function POST(req: NextRequest) {
     const data = await response.json();
     const reply = data.choices?.[0]?.message?.content?.trim() || "Je n'ai pas compris, peux-tu reformuler ?";
     return NextResponse.json({ reply });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ reply: "Erreur lors de la communication avec l'IA." }, { status: 500 });
   }
 } 

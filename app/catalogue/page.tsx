@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import Image from 'next/image';
 
 interface Bot {
   id: string;
@@ -30,7 +31,7 @@ export default function Catalogue() {
         }
         setLoading(false);
       })
-      .catch(error => {
+      .catch(() => {
         setBots([]);
         setLoading(false);
       });
@@ -93,10 +94,12 @@ export default function Catalogue() {
           <div key={bot.id} className="catalogue-card">
             <div>
               {bot.image && (
-                <img
+                <Image
                   src={bot.image}
                   alt={bot.name}
                   className="catalogue-img"
+                  width={300}
+                  height={120}
                 />
               )}
               <h2 className="catalogue-card-title">{bot.name}</h2>

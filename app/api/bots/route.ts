@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { promises as fs } from 'fs';
 import path from 'path';
 
@@ -17,8 +17,8 @@ async function readBotsData(): Promise<Bot[]> {
   try {
     const fileContent = await fs.readFile(dataFilePath, 'utf8');
     return JSON.parse(fileContent);
-  } catch (error) {
-    console.error('Erreur lors de la lecture du fichier bots.json:', error);
+  } catch {
+    console.error('Erreur lors de la lecture du fichier bots.json');
     // En cas d'erreur (ex: fichier non trouvé), retourner un tableau vide
     return [];
   }
